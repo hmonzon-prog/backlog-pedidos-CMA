@@ -102,8 +102,8 @@ class DataStore {
             altura: parseInt(row['ALTURA']) || 0,
             piso: parseInt(row['PISO']) || 0,
             fecha: row[dateKey] ? new Date(row[dateKey]).toISOString() : new Date().toISOString(),
-            asignadoA: null, // by default not assigned
-            raw: row // save raw data just in case
+            asignadoA: null,
+            isDestrabado: false
         };
     }
 
