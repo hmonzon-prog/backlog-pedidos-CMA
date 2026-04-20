@@ -1,6 +1,14 @@
 class DataStore {
     constructor() {
-        this.maquinistas = ["Juan Perez", "Carlos Gomez", "Miguel Sanchez", "Roberto Luis", "Andres Silva"];
+        this.maquinistas = [
+            "Alan Del Pino",
+            "Gaston Lobo",
+            "Ian Effron",
+            "Facu Luquez",
+            "Yonathan Algañaraz",
+            "Alcides",
+            "Ruben Goitia"
+        ];
         
         const firebaseConfig = {
           apiKey: "AIzaSyAMiBIeH5NUwItFsSH5kchjZlETyFolh-A",
