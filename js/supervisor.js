@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", () => {
     fileInput.addEventListener('change', (e) => {
         if (e.target.files.length) {
             handleFile(e.target.files[0]);
+            // Reset para poder volver a subir el mismo archivo
+            e.target.value = '';
         }
     });
 
