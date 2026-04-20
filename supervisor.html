@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supervisor Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- XLSX library for Excel parsing -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h2 style="margin:0; color: #58a6ff; display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="layout-dashboard"></i> Panel de Supervisor</h2>
+        <a href="index.html" class="btn"><i data-lucide="log-out"></i> Salir</a>
+    </nav>
+
+    <div class="container">
+        <!-- Dashboard Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <label class="btn primary" style="font-size: 1rem; padding: 0.75rem 1.5rem;">
+                    <i data-lucide="upload"></i> Subir Archivo Infor
+                    <input type="file" id="file-input" style="display: none;" accept=".xlsx, .xls, .csv">
+                </label>
+                <div id="upload-status" style="margin-top: 0.5rem; font-size: 0.9rem; font-weight: 500;"></div>
+            </div>
+            <button class="btn" id="btn-refresh"><i data-lucide="refresh-cw"></i> Refrescar Pantalla</button>
+        </div>
+
+        <!-- Dashboard Counters -->
+        <div class="kpi-grid" id="kpi-container">
+            <!-- Rendered by JS -->
+        </div>
+
+        <div class="toolbar">
+            <h2>Gestión de "Lanzados"</h2>
+            <div>
+                <button class="btn" id="btn-refresh"><i data-lucide="refresh-cw"></i> Actualizar</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table id="orders-table">
+                <thead>
+                    <tr>
+                        <th>Orden</th>
+                        <th>Estado</th>
+                        <th>Familia / Marca</th>
+                        <th>Cant.</th>
+                        <th>Complejidad (Piso/Alt)</th>
+                        <th>Asignación</th>
+                    </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                    <!-- Rendered by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <!-- Data Logic -->
+    <script src="js/data-store.js"></script>
+    <!-- Supervisor Logic -->
+    <script src="js/supervisor.js"></script>
+</body>
+</html>

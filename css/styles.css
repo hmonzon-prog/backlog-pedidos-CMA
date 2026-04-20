@@ -1,0 +1,338 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: #0d1117;
+    color: #e6edf3;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Typography & Layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+h1, h2, h3, h4 {
+    margin-top: 0;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 2rem;
+    background: linear-gradient(135deg, #58a6ff 0%, #1f6feb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+}
+
+/* Glassmorphism Cards */
+.card {
+    background: rgba(22, 27, 34, 0.7);
+    border: 1px solid rgba(48, 54, 61, 0.6);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {  
+    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+/* Roles Grid (Login) */
+.roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.role-card {
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid rgba(88, 166, 255, 0.1);
+}
+
+.role-card:hover {
+    border-color: rgba(88, 166, 255, 0.5);
+    transform: translateY(-4px);
+}
+
+.role-icon {
+    font-size: 3rem;
+    color: #58a6ff;
+    margin-bottom: 1rem;
+}
+
+/* Buttons */
+.btn {
+    appearance: none;
+    background: #238636;
+    border: 1px solid rgba(240, 246, 252, 0.1);
+    color: #ffffff;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.btn:hover {
+    background: #2ea043;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn.primary {
+    background: #1f6feb;
+}
+
+.btn.primary:hover {
+    background: #388bfd;
+}
+
+.btn.danger {
+    background: #da3633;
+}
+
+.btn.danger:hover {
+    background: #f85149;
+}
+
+/* Upload Zone */
+.upload-zone {
+    border: 2px dashed #30363d;
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(22, 27, 34, 0.4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 2rem;
+}
+
+.upload-zone:hover, .upload-zone.drag-active {
+    border-color: #58a6ff;
+    background: rgba(88, 166, 255, 0.05);
+}
+
+.upload-zone i {
+    font-size: 2.5rem;
+    color: #8b949e;
+    margin-bottom: 1rem;
+}
+
+/* Supervisor Dashboard KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-top: 3px solid #30363d;
+}
+
+.kpi-card h3 {
+    font-size: 0.85rem;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-card .value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #e6edf3;
+}
+
+/* Status Colors */
+.kpi-card.status-espera { border-top-color: #d2a8ff; }
+.kpi-card.status-preparacion { border-top-color: #f1e05a; }
+.kpi-card.status-preparado { border-top-color: #3fb950; }
+.kpi-card.status-expedidos { border-top-color: #a5d6ff; }
+.kpi-card.status-lanzado { border-top-color: #ff7b72; }
+.kpi-card.status-pieza-lanzada { border-top-color: #ffa657; }
+.kpi-card.status-default { border-top-color: #8b949e; }
+
+.badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+.badge.priority { background: #da3633; color: white; }
+.badge.destrabado { background: #8957e5; color: white; animation: pulse 2s infinite; }
+.badge.old { background: #d2a8ff; color: #0d1117; }
+.badge.brand { background: #3fb950; color: #0d1117;}
+
+/* Tables */
+.table-container {
+    overflow-x: auto;
+    background: rgba(22, 27, 34, 0.7);
+    border-radius: 12px;
+    border: 1px solid rgba(48, 54, 61, 0.6);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+th, td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(48, 54, 61, 0.6);
+}
+
+th {
+    background: rgba(48, 54, 61, 0.3);
+    color: #8b949e;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Machinist Mobile View */
+.mobile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.order-card {
+    background: #161b22;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #58a6ff;
+    position: relative;
+    overflow: hidden;
+}
+
+.order-card .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #30363d;
+}
+
+.order-card .order-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.order-card .details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail-item .label {
+    font-size: 0.75rem;
+    color: #8b949e;
+    text-transform: uppercase;
+}
+
+.detail-item .value {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.action-btn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(137, 87, 229, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(137, 87, 229, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(137, 87, 229, 0); }
+}
+
+select {
+    background: #0d1117;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 0.5rem;
+    border-radius: 6px;
+    outline: none;
+}
+select:focus {
+    border-color: #58a6ff;
+}
+
+/* Toolbar */
+.toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(22, 27, 34, 0.8);
+    border-bottom: 1px solid #30363d;
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.machinist-select {
+    width: 100%;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    font-size: 1.1rem;
+}

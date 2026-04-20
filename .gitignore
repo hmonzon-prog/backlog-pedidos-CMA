@@ -1,0 +1,5 @@
+# Ignore Excel files and local test data
+*.xlsx
+*.xls
+*.csv
+.DS_Store

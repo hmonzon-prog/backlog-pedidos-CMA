@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Manager - Login</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container" style="max-width: 800px; margin-top: 5rem;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h1>Sistema de Panel Operativo</h1>
+            <p style="color: #8b949e; font-size: 1.1rem;">Seleccione su rol para continuar</p>
+        </div>
+
+        <div class="roles-grid">
+            <a href="supervisor.html" class="card role-card">
+                <i data-lucide="layout-dashboard" class="role-icon"></i>
+                <h2>Supervisor</h2>
+                <p style="color: #8b949e;">Panel de control, carga de backlog y asignación de tareas.</p>
+            </a>
+
+            <a href="machinist-login.html" class="card role-card" style="border-color: rgba(63, 185, 80, 0.2);">
+                <i data-lucide="forklift" class="role-icon" style="color: #3fb950;"></i>
+                <h2>Maquinista</h2>
+                <p style="color: #8b949e;">Vista de operario para gestión directa y ejecución en el almacén.</p>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar iconos
+        lucide.createIcons();
+    </script>
+</body>
+</html>

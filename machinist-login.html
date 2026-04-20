@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Maquinista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container" style="max-width: 500px; margin-top: 4rem;">
+        <div class="card" style="text-align: center;">
+            <i data-lucide="forklift" style="font-size: 3rem; color: #3fb950; margin-bottom: 1rem;"></i>
+            <h2>Acceso Operativo</h2>
+            <p style="color: #8b949e; margin-bottom: 2rem;">Selecciona tu usuario para ver tus órdenes asignadas.</p>
+
+            <select id="machinist-selector" class="machinist-select">
+                <option value="">-- Selecciona tu nombre --</option>
+                <!-- Rendered by JS -->
+            </select>
+
+            <button class="btn primary" style="width: 100%; padding: 1rem; font-size: 1.1rem; justify-content: center;" onclick="login()">
+                Ingresar al Panel
+            </button>
+            
+            <div style="margin-top: 1.5rem;">
+                <a href="index.html" style="color: #8b949e; text-decoration: underline; font-size: 0.85rem;">Volver al Inicio</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="js/data-store.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            const select = document.getElementById('machinist-selector');
+            const machinists = window.db.getMachinists();
+            select.innerHTML += machinists.map(m => `<option value="${m}">${m}</option>`).join('');
+        });
+
+        function login() {
+            const user = document.getElementById('machinist-selector').value;
+            if(!user) return alert('Por favor, selecciona tu nombre.');
+            localStorage.setItem('current_machinist', user);
+            window.location.href = 'machinist.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panel Maquinista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Mobile specific adjustments */
+        body { background-color: #000; }
+        .navbar-mobile {
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #8b949e;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar-mobile">
+        <div style="display:flex; align-items:center; gap:0.5rem; color:#3fb950; font-weight:600;">
+            <i data-lucide="user"></i>
+            <span id="user-name">Cargando...</span>
+        </div>
+        <button class="btn" style="background:transparent; border:1px solid #30363d;" onclick="logout()">
+            <i data-lucide="log-out"></i>
+        </button>
+    </div>
+
+    <div class="mobile-container" id="tasks-container">
+        <!-- Rendered by JS -->
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="js/data-store.js"></script>
+    <script src="js/machinist.js"></script>
+</body>
+</html>
