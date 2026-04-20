@@ -27,12 +27,16 @@ class DataStore {
         });
     }
 
+    _sanitize(obj) {
+        // Firebase no admite 'undefined', reemplazamos por null
+        return JSON.parse(JSON.stringify(obj, (key, value) => value === undefined ? null : value));
+    }
+
     _syncOrders(updatedArray) {
         const obj = {};
         updatedArray.forEach(o => {
-            // Firebase no admite claves con . # $ [ ]
             const cleanId = String(o.id).replace(/[.#$\[\]]/g, '');
-            obj[cleanId] = o;
+            obj[cleanId] = this._sanitize(o);
         });
         this.ordersRef.set(obj);
     }
