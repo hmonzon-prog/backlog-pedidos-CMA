@@ -48,9 +48,13 @@ class DataStore {
         const obj = {};
         updatedArray.forEach(o => {
             const cleanId = String(o.id).replace(/[.#$\[\]]/g, '');
-            obj[cleanId] = this._sanitize(o);
+            // Strip 'raw' (Excel row data) siempre - causa serialization errors en Firebase
+            const { raw, ...cleanOrder } = o;
+            obj[cleanId] = this._sanitize(cleanOrder);
         });
-        this.ordersRef.set(obj);
+        this.ordersRef.set(obj)
+            .then(() => console.log('✅ Firebase sync OK'))
+            .catch(err => console.error('❌ Firebase sync FAILED:', err));
     }
 
     /**
