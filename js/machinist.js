@@ -1,6 +1,5 @@
-// machinist.js
-
 let currentUser = '';
+let previousAssignedIds = null; // null = primera carga, no alertar
 
 document.addEventListener("DOMContentLoaded", () => {
     currentUser = localStorage.getItem('current_machinist');
@@ -11,7 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById('user-name').innerText = currentUser;
     lucide.createIcons();
-    renderTasks();
+
+    // Pedir permiso de notificaciones del sistema (opcional, mejora la exp)
+    if ("Notification" in window && Notification.permission === "default") {
+        Notification.requestPermission();
+    }
 });
 
 function logout() {
@@ -21,10 +24,8 @@ function logout() {
 
 function copyOrder(id) {
     navigator.clipboard.writeText(id).then(() => {
-        alert('Orden Copiada: ' + id);
-    }).catch(err => {
-        console.error('Error copiando', err);
-    });
+        showBanner('✅ Orden copiada: ' + id, '#3fb950');
+    }).catch(err => console.error('Error copiando', err));
 }
 
 function classifyComplexity(altura, piso) {
@@ -34,9 +35,108 @@ function classifyComplexity(altura, piso) {
     return 'N/A';
 }
 
+/* ===== SISTEMA DE ALERTAS ===== */
+
+function playAlertSound() {
+    try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Dos tonos tipo "ding ding"
+        [0, 0.3].forEach(startOffset => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime + startOffset);
+            osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + startOffset + 0.2);
+            
+            gain.gain.setValueAtTime(0.6, ctx.currentTime + startOffset);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startOffset + 0.4);
+            
+            osc.start(ctx.currentTime + startOffset);
+            osc.stop(ctx.currentTime + startOffset + 0.4);
+        });
+    } catch(e) {
+        console.log('Audio no disponible:', e);
+    }
+}
+
+function triggerVibration() {
+    if ('vibrate' in navigator) {
+        // Patrón: vibrar 300ms, pausa 100ms, vibrar 300ms
+        navigator.vibrate([300, 100, 300]);
+    }
+}
+
+function showBanner(message, color = '#f1e05a') {
+    // Eliminar banner anterior si existe
+    const existing = document.getElementById('alert-banner');
+    if (existing) existing.remove();
+
+    const banner = document.createElement('div');
+    banner.id = 'alert-banner';
+    banner.style.cssText = `
+        position: fixed;
+        top: 70px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${color};
+        color: ${color === '#f1e05a' ? '#000' : '#fff'};
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        z-index: 9999;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        animation: bannerIn 0.3s ease;
+        max-width: 90vw;
+        text-align: center;
+    `;
+    banner.innerHTML = message;
+    document.body.appendChild(banner);
+
+    // Auto-cerrar después de 5 segundos
+    setTimeout(() => {
+        banner.style.animation = 'bannerOut 0.3s ease forwards';
+        setTimeout(() => banner.remove(), 300);
+    }, 5000);
+}
+
+function triggerNewOrderAlert(newOrders) {
+    playAlertSound();
+    triggerVibration();
+    
+    const orderList = newOrders.map(o => `#${o.id}`).join(', ');
+    showBanner(`🚨 NUEVO PEDIDO ASIGNADO<br><small>${orderList}</small>`, '#f1e05a');
+    
+    // Notificación del sistema si tiene permiso
+    if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("📦 Nuevo pedido asignado", {
+            body: `Orden ${orderList} fue asignada a vos`,
+            icon: "/favicon.ico"
+        });
+    }
+}
+
+/* ===== FIN ALERTAS ===== */
+
 function renderTasks() {
     const orders = window.db.getOrders();
     const myTasks = orders.filter(o => o.asignadoA === currentUser && o.estado !== "Preparado");
+
+    // === DETECCIÓN DE NUEVAS ASIGNACIONES ===
+    if (previousAssignedIds !== null) {
+        const currentIds = new Set(myTasks.map(o => o.id));
+        const newOrders = myTasks.filter(o => !previousAssignedIds.has(o.id));
+        if (newOrders.length > 0) {
+            triggerNewOrderAlert(newOrders);
+        }
+    }
+    // Actualizamos el registro de IDs para la próxima comparación
+    previousAssignedIds = new Set(myTasks.map(o => o.id));
+    /* ======================================= */
 
     const container = document.getElementById('tasks-container');
 

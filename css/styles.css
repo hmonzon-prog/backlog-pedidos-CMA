@@ -309,6 +309,17 @@ select:focus {
     border-color: #58a6ff;
 }
 
+/* Banner de alertas */
+@keyframes bannerIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes bannerOut {
+    from { opacity: 1; transform: translateX(-50%) translateY(0); }
+    to   { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
 /* Toolbar */
 .toolbar {
     display: flex;
