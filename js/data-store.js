@@ -19,7 +19,11 @@ class DataStore {
           appId: "1:710531746517:web:858b44155c2238188b705c",
           databaseURL: "https://backlog-manager-67dc5-default-rtdb.firebaseio.com"
         };
-        firebase.initializeApp(firebaseConfig);
+
+        // Evitar doble inicialización si se carga en múltiples pestañas
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         this.db = firebase.database();
         this.ordersRef = this.db.ref('orders');
         this.localOrders = [];
