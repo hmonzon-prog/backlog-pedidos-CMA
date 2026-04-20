@@ -40,24 +40,34 @@ function classifyComplexity(altura, piso) {
 function playAlertSound() {
     try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Dos tonos tipo "ding ding"
-        [0, 0.3].forEach(startOffset => {
-            const osc = ctx.createOscillator();
+
+        // Alarma industrial: 4 beeps largos tipo "forklift"
+        const beeps = [
+            { start: 0.0,  dur: 0.4, freq: 960 },
+            { start: 0.55, dur: 0.4, freq: 960 },
+            { start: 1.1,  dur: 0.4, freq: 960 },
+            { start: 1.65, dur: 0.6, freq: 1100 }, // último más agudo y largo
+        ];
+
+        beeps.forEach(({ start, dur, freq }) => {
+            const osc  = ctx.createOscillator();
             const gain = ctx.createGain();
+
+            // Distorsión suave para que suene más "industrial"
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
+
+            gain.gain.setValueAtTime(0, ctx.currentTime + start);
+            gain.gain.linearRampToValueAtTime(0.5, ctx.currentTime + start + 0.02);
+            gain.gain.setValueAtTime(0.5, ctx.currentTime + start + dur - 0.05);
+            gain.gain.linearRampToValueAtTime(0, ctx.currentTime + start + dur);
+
             osc.connect(gain);
             gain.connect(ctx.destination);
-            
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, ctx.currentTime + startOffset);
-            osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + startOffset + 0.2);
-            
-            gain.gain.setValueAtTime(0.6, ctx.currentTime + startOffset);
-            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startOffset + 0.4);
-            
-            osc.start(ctx.currentTime + startOffset);
-            osc.stop(ctx.currentTime + startOffset + 0.4);
+            osc.start(ctx.currentTime + start);
+            osc.stop(ctx.currentTime + start + dur);
         });
+
     } catch(e) {
         console.log('Audio no disponible:', e);
     }
@@ -65,8 +75,8 @@ function playAlertSound() {
 
 function triggerVibration() {
     if ('vibrate' in navigator) {
-        // Patrón: vibrar 300ms, pausa 100ms, vibrar 300ms
-        navigator.vibrate([300, 100, 300]);
+        // Patrón largo y agresivo: beep-beep-beep-beeeeep
+        navigator.vibrate([400, 150, 400, 150, 400, 150, 800]);
     }
 }
 
