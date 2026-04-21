@@ -331,5 +331,50 @@ function renderDashboard() {
         `;
     }).join('');
 
+    // Render Team Workload
+    const teamStats = {};
+    machinists.forEach(m => teamStats[m] = { pendientes: 0, proceso: 0, completados: 0 });
+    
+    orders.forEach(o => {
+        if (o.asignadoA && teamStats[o.asignadoA]) {
+            if (o.estado === 'Preparado') {
+                teamStats[o.asignadoA].completados++;
+            } else if (o.estado === 'En preparación') {
+                teamStats[o.asignadoA].proceso++;
+            } else {
+                teamStats[o.asignadoA].pendientes++;
+            }
+        }
+    });
+
+    const teamHTML = machinists.map(m => {
+        const s = teamStats[m];
+        const total = s.pendientes + s.proceso + s.completados;
+        const hasWork = total > 0;
+        
+        return `
+            <div class="card kpi-card" style="opacity: ${hasWork ? '1' : '0.6'}; transition: all 0.2s; padding: 1rem; border-top-color: ${hasWork ? '#58a6ff' : '#30363d'}">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1rem; color: ${hasWork ? '#58a6ff' : '#8b949e'}; text-transform:none;">${m}</h3>
+                <div style="font-size: 0.85rem; color: #c9d1d9; display: flex; flex-direction: column; gap: 0.25rem;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>En espera:</span> <span style="font-weight: 600;">${s.pendientes}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>En proceso:</span> <span style="font-weight: 600; color: #f1e05a;">${s.proceso}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Terminados:</span> <span style="font-weight: 600; color: #3fb950;">${s.completados}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    const teamContainer = document.getElementById('team-container');
+    if (teamContainer) {
+        teamContainer.innerHTML = teamHTML;
+        teamContainer.style.gridTemplateColumns = 'repeat(auto-fill, minmax(160px, 1fr))';
+    }
+
     lucide.createIcons();
 }
