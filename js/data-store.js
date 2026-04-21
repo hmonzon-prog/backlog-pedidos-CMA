@@ -24,7 +24,22 @@ class DataStore {
         if (!firebase.apps.length) {
             firebase.initializeApp(firebaseConfig);
         }
+
+        // Si el WebSocket falla (típico en redes de empresa), Firebase intenta reconectar.
+        // Pero podemos forzar el log para ver qué pasa.
+        // firebase.database.enableLogging(true); 
+
         this.db = firebase.database();
+        
+        // Manejo de conexión offline/online
+        this.db.ref('.info/connected').on('value', (snap) => {
+            if (snap.val() === true) {
+                console.log("🟢 Conectado a Firebase");
+            } else {
+                console.warn("🟡 Perdiendo conexión... intentando reconectar");
+            }
+        });
+
         this.ordersRef = this.db.ref('orders');
         this.localOrders = [];
 
