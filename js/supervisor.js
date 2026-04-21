@@ -306,6 +306,8 @@ function renderDashboard() {
 
         // Display state logic
         let stateDisplay = o.estado || 'Sin estado';
+        let isModified = (o.estado !== o.estadoExcel) || o.asignadoA;
+
         if (o.estado === 'Preparado') {
             stateDisplay = `Preparado por: ${o.asignadoA || 'Desconocido'}`;
             badges += `<span class="badge" style="background:#58a6ff; color:white; margin-right:0.5rem">Completado</span>`;
@@ -321,7 +323,15 @@ function renderDashboard() {
                     <div style="margin-top:0.5rem;">${badges}</div>
                 </td>
                 <td>
-                    <span class="badge" style="border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5)">${stateDisplay}</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span class="badge" style="border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.5)">${stateDisplay}</span>
+                        ${isModified ? `
+                            <button class="btn" title="Revertir cambios" style="padding: 0.2rem; background: transparent; border: 1px solid #da3633; color: #da3633;" 
+                                    onclick="if(confirm('¿Revertir esta orden a su estado original?')) { window.db.resetOrder('${o.id}'); renderDashboard(); }">
+                                <i data-lucide="rotate-ccw" style="width: 14px; height: 14px;"></i>
+                            </button>
+                        ` : ''}
+                    </div>
                 </td>
                 <td>${o.familia || '-'}</td>
                 <td><strong style="font-size:1.1rem">${o.cantidad || 0}</strong></td>

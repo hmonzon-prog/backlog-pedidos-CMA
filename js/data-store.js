@@ -282,6 +282,17 @@ class DataStore {
             responseTime: null
         });
     }
+
+    resetOrder(orderId) {
+        const orders = this.getOrders();
+        const updated = orders.map(o => {
+            if (o.id === orderId) {
+                return { ...o, estado: o.estadoExcel, asignadoA: null };
+            }
+            return o;
+        });
+        this._syncOrders(updated);
+    }
 }
 
 window.db = new DataStore();
