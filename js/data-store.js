@@ -230,6 +230,40 @@ class DataStore {
     getMachinists() {
         return this.maquinistas;
     }
+
+    /**
+     * PRESENCE & PINGS
+     */
+    updatePresence(machinistName) {
+        if (!machinistName) return;
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName).update({
+            lastActive: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
+
+    // Escuchar presencia de todos
+    onPresenceChange(callback) {
+        this.db.ref('presence').on('value', (snapshot) => {
+            callback(snapshot.val() || {});
+        });
+    }
+
+    sendPing(machinistName) {
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName).update({
+            pingRequest: firebase.database.ServerValue.TIMESTAMP
+        });
+    }
+
+    onPingReceived(machinistName, callback) {
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName + '/pingRequest').on('value', (snapshot) => {
+            if (snapshot.val()) {
+                callback();
+            }
+        });
+    }
 }
 
 window.db = new DataStore();

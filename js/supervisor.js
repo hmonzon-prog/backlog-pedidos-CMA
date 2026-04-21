@@ -1,8 +1,16 @@
 // supervisor.js
 
+let teamPresence = {};
+
 document.addEventListener("DOMContentLoaded", () => {
     lucide.createIcons();
     renderDashboard();
+
+    // Escuchar presencia en tiempo real
+    window.db.onPresenceChange((data) => {
+        teamPresence = data;
+        renderDashboard();
+    });
 
     const fileInput = document.getElementById('file-input');
     const refreshBtn = document.getElementById('btn-refresh');
@@ -352,9 +360,20 @@ function renderDashboard() {
         const total = s.pendientes + s.proceso + s.completados;
         const hasWork = total > 0;
         
+        // Calcular estado online (activo en el último minuto)
+        const cleanName = m.replace(/[.#$\[\]]/g, '_');
+        const presence = teamPresence[cleanName];
+        const isOnline = presence && presence.lastActive && (Date.now() - presence.lastActive < 60000);
+        
         return `
-            <div class="card kpi-card" style="opacity: ${hasWork ? '1' : '0.6'}; transition: all 0.2s; padding: 1rem; border-top-color: ${hasWork ? '#58a6ff' : '#30363d'}">
-                <h3 style="margin-bottom: 0.5rem; font-size: 1rem; color: ${hasWork ? '#58a6ff' : '#8b949e'}; text-transform:none;">${m}</h3>
+            <div class="card kpi-card" style="opacity: ${hasWork || isOnline ? '1' : '0.6'}; transition: all 0.2s; padding: 1rem; border-top-color: ${isOnline ? '#3fb950' : (hasWork ? '#58a6ff' : '#30363d')}">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h3 style="margin: 0; font-size: 1rem; color: ${isOnline ? '#3fb950' : '#c9d1d9'}; text-transform:none;">
+                        <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${isOnline ? '#3fb950' : '#8b949e'}; margin-right: 5px;"></span>
+                        ${m}
+                    </h3>
+                    ${isOnline ? `<button class="btn" style="padding: 2px 8px; font-size: 0.7rem; background: #da3633; color: white;" onclick="window.db.sendPing('${m}')">Llamar</button>` : ''}
+                </div>
                 <div style="font-size: 0.85rem; color: #c9d1d9; display: flex; flex-direction: column; gap: 0.25rem;">
                     <div style="display: flex; justify-content: space-between;">
                         <span>En espera:</span> <span style="font-weight: 600;">${s.pendientes}</span>

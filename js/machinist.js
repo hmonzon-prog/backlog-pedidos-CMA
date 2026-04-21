@@ -25,6 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener('touchstart', unlockAudio, { once: false });
     document.addEventListener('click', unlockAudio, { once: false });
 
+    // Reportar presencia cada 20 segundos
+    window.db.updatePresence(currentUser);
+    setInterval(() => window.db.updatePresence(currentUser), 20000);
+
+    // Escuchar "llamados" del supervisor
+    window.db.onPingReceived(currentUser, () => {
+        playAlertSound();
+        triggerVibration();
+        showBanner('🔔 EL SUPERVISOR TE ESTÁ LLAMANDO', '#da3633');
+    });
+
     if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
     }
