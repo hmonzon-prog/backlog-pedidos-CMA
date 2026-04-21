@@ -237,8 +237,23 @@ class DataStore {
     updatePresence(machinistName) {
         if (!machinistName) return;
         const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
-        this.db.ref('presence/' + cleanName).update({
+        const ref = this.db.ref('presence/' + cleanName);
+        
+        ref.update({
             lastActive: firebase.database.ServerValue.TIMESTAMP
+        });
+
+        // Al cerrar el navegador/pestaña, poner presencia en 0
+        ref.onDisconnect().update({
+            lastActive: 0
+        });
+    }
+
+    goOffline(machinistName) {
+        if (!machinistName) return;
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName).update({
+            lastActive: 0
         });
     }
 

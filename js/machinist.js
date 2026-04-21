@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function logout() {
+    window.db.goOffline(currentUser);
     localStorage.removeItem('current_machinist');
     window.location.href = 'index.html';
 }
