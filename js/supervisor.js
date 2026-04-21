@@ -380,8 +380,10 @@ function renderDashboard() {
                 </div>
                 
                 ${hasResponse ? `
-                    <div style="background: rgba(63, 185, 80, 0.2); border: 1px solid #3fb950; padding: 0.5rem; border-radius: 6px; margin-bottom: 0.5rem; text-align: center; font-size: 0.9rem; font-weight: 700; color: #3fb950;">
+                    <div style="background: rgba(63, 185, 80, 0.2); border: 1px solid #3fb950; padding: 0.5rem; border-radius: 6px; margin-bottom: 0.5rem; text-align: center; font-size: 0.9rem; font-weight: 700; color: #3fb950; position: relative;">
                         🏃 ${presence.response}
+                        <button class="btn" style="position: absolute; top: -5px; right: -5px; padding: 0 4px; border-radius: 50%; background: #3fb950; color: white; font-size: 0.6rem; border: none; cursor: pointer;" 
+                                onclick="window.db.clearResponse('${m}')">OK</button>
                     </div>
                 ` : ''}
 

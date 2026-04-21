@@ -274,6 +274,14 @@ class DataStore {
             responseTime: firebase.database.ServerValue.TIMESTAMP
         });
     }
+
+    clearResponse(machinistName) {
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName).update({
+            response: null,
+            responseTime: null
+        });
+    }
 }
 
 window.db = new DataStore();
