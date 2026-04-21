@@ -1,5 +1,15 @@
 let currentUser = '';
-let previousAssignedIds = null; // null = primera carga, no alertar
+let previousAssignedIds = null;
+let audioCtx = null; // Contexto de audio global, desbloqueado con primer toque
+
+function unlockAudio() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     currentUser = localStorage.getItem('current_machinist');
@@ -11,7 +21,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('user-name').innerText = currentUser;
     lucide.createIcons();
 
-    // Pedir permiso de notificaciones del sistema (opcional, mejora la exp)
+    // Desbloquear audio en el primer toque del usuario
+    document.addEventListener('touchstart', unlockAudio, { once: false });
+    document.addEventListener('click', unlockAudio, { once: false });
+
     if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
     }
@@ -39,21 +52,23 @@ function classifyComplexity(altura, piso) {
 
 function playAlertSound() {
     try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        // Usar el contexto global ya desbloqueado por el usuario
+        unlockAudio();
+        const ctx = audioCtx;
+        if (!ctx) return;
 
         // Alarma industrial: 4 beeps largos tipo "forklift"
         const beeps = [
             { start: 0.0,  dur: 0.4, freq: 960 },
             { start: 0.55, dur: 0.4, freq: 960 },
             { start: 1.1,  dur: 0.4, freq: 960 },
-            { start: 1.65, dur: 0.6, freq: 1100 }, // último más agudo y largo
+            { start: 1.65, dur: 0.6, freq: 1100 },
         ];
 
         beeps.forEach(({ start, dur, freq }) => {
             const osc  = ctx.createOscillator();
             const gain = ctx.createGain();
 
-            // Distorsión suave para que suene más "industrial"
             osc.type = 'square';
             osc.frequency.setValueAtTime(freq, ctx.currentTime + start);
 
