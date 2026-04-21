@@ -320,6 +320,12 @@ select:focus {
     to   { opacity: 0; transform: translateX(-50%) translateY(-20px); }
 }
 
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
 /* Toolbar */
 .toolbar {
     display: flex;

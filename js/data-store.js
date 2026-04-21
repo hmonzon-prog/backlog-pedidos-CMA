@@ -252,7 +252,8 @@ class DataStore {
     sendPing(machinistName) {
         const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
         this.db.ref('presence/' + cleanName).update({
-            pingRequest: firebase.database.ServerValue.TIMESTAMP
+            pingRequest: firebase.database.ServerValue.TIMESTAMP,
+            response: null // Limpiar respuesta anterior al mandar nuevo ping
         });
     }
 
@@ -260,8 +261,17 @@ class DataStore {
         const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
         this.db.ref('presence/' + cleanName + '/pingRequest').on('value', (snapshot) => {
             if (snapshot.val()) {
-                callback();
+                callback(snapshot.val());
             }
+        });
+    }
+
+    sendResponse(machinistName, text) {
+        const cleanName = machinistName.replace(/[.#$\[\]]/g, '_');
+        this.db.ref('presence/' + cleanName).update({
+            pingRequest: null, // Ya atendió el llamado
+            response: text,
+            responseTime: firebase.database.ServerValue.TIMESTAMP
         });
     }
 }

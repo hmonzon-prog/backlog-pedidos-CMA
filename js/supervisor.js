@@ -365,15 +365,26 @@ function renderDashboard() {
         const presence = teamPresence[cleanName];
         const isOnline = presence && presence.lastActive && (Date.now() - presence.lastActive < 60000);
         
+        // Respuesta reciente (menos de 5 minutos)
+        const hasResponse = presence && presence.response && (Date.now() - presence.responseTime < 300000);
+        
         return `
-            <div class="card kpi-card" style="opacity: ${hasWork || isOnline ? '1' : '0.6'}; transition: all 0.2s; padding: 1rem; border-top-color: ${isOnline ? '#3fb950' : (hasWork ? '#58a6ff' : '#30363d')}">
+            <div class="card kpi-card" style="opacity: ${hasWork || isOnline || hasResponse ? '1' : '0.6'}; transition: all 0.2s; padding: 1rem; border-top-color: ${hasResponse ? '#3fb950' : (isOnline ? '#3fb950' : (hasWork ? '#58a6ff' : '#30363d'))}">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
                     <h3 style="margin: 0; font-size: 1rem; color: ${isOnline ? '#3fb950' : '#c9d1d9'}; text-transform:none;">
                         <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: ${isOnline ? '#3fb950' : '#8b949e'}; margin-right: 5px;"></span>
                         ${m}
                     </h3>
-                    ${isOnline ? `<button class="btn" style="padding: 2px 8px; font-size: 0.7rem; background: #da3633; color: white;" onclick="window.db.sendPing('${m}')">Llamar</button>` : ''}
+                    ${isOnline && !presence.pingRequest ? `<button class="btn" style="padding: 2px 8px; font-size: 0.7rem; background: #da3633; color: white;" onclick="window.db.sendPing('${m}')">Llamar</button>` : ''}
+                    ${presence && presence.pingRequest ? `<span style="font-size: 0.7rem; color: #f1e05a; animation: pulse 1s infinite;">Llamando...</span>` : ''}
                 </div>
+                
+                ${hasResponse ? `
+                    <div style="background: rgba(63, 185, 80, 0.2); border: 1px solid #3fb950; padding: 0.5rem; border-radius: 6px; margin-bottom: 0.5rem; text-align: center; font-size: 0.9rem; font-weight: 700; color: #3fb950;">
+                        🏃 ${presence.response}
+                    </div>
+                ` : ''}
+
                 <div style="font-size: 0.85rem; color: #c9d1d9; display: flex; flex-direction: column; gap: 0.25rem;">
                     <div style="display: flex; justify-content: space-between;">
                         <span>En espera:</span> <span style="font-weight: 600;">${s.pendientes}</span>

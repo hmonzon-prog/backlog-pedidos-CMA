@@ -30,10 +30,24 @@ document.addEventListener("DOMContentLoaded", () => {
     setInterval(() => window.db.updatePresence(currentUser), 20000);
 
     // Escuchar "llamados" del supervisor
-    window.db.onPingReceived(currentUser, () => {
-        playAlertSound();
-        triggerVibration();
-        showBanner('🔔 EL SUPERVISOR TE ESTÁ LLAMANDO', '#da3633');
+    let lastHandledPing = 0;
+    window.db.onPingReceived(currentUser, (timestamp) => {
+        if (timestamp && timestamp > lastHandledPing) {
+            lastHandledPing = timestamp;
+            playAlertSound();
+            triggerVibration();
+            
+            // Mostrar banner con botón de respuesta
+            showBanner(`
+                <div style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+                    <span>🔔 EL SUPERVISOR TE ESTÁ LLAMANDO</span>
+                    <button class="btn" style="background: #3fb950; color: white; width: 100%; padding: 0.8rem;" 
+                        onclick="window.db.sendResponse('${currentUser}', '¡En camino!'); this.parentElement.parentElement.remove();">
+                        🏃 ¡VOY EN CAMINO!
+                    </button>
+                </div>
+            `, '#da3633');
+        }
     });
 
     if ("Notification" in window && Notification.permission === "default") {
